@@ -122,7 +122,11 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.purple.shade50,
+                  border: Border.all(
+                    color: Colors.purple.shade200,
+                    width: 2.0,
+                  ),
                   borderRadius: BorderRadius.circular(8.0),
                   image: _image != null
                       ? DecorationImage(
@@ -132,10 +136,10 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                       : null,
                 ),
                 child: _image == null
-                    ? Icon(
+                    ? const Icon(
                         Icons.image,
                         size: 50,
-                        color: Colors.white,
+                        color: Colors.purple,
                       )
                     : null,
               ),
