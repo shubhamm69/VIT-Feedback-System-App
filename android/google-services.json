@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "851896185449",
+    "project_id": "smart-city-feedback-app-7d58c",
+    "storage_bucket": "smart-city-feedback-app-7d58c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851896185449:android:4bf677140a22e078ef28f8",
+        "android_client_info": {
+          "package_name": "com.example.smartcityfeedbacksystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851896185449-d2vbsktnpj9jjattqn0bcoiethjrvgvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsgR6UGWdASW4oPB3eVPKKIGv0JdMd4Zk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851896185449-d2vbsktnpj9jjattqn0bcoiethjrvgvs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
