@@ -86,11 +86,11 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
     try {
       String feedbackId = await feedbackService.createFeedback(feedback);
 
-      String imagePath =
-          await feedbackService.storeImage(feedbackId, _image!);
+      String imagePath = await feedbackService.storeImage(feedbackId, _image!);
 
       feedback.imagePath = imagePath;
-      feedback.id = feedbackId; // Update the feedback's ID with the generated ID
+      feedback.id =
+          feedbackId; // Update the feedback's ID with the generated ID
 
       await feedbackService.updateFeedback(feedback);
 
@@ -109,6 +109,7 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple,
         title: Text('Add Feedback'),
       ),
       body: Padding(
@@ -117,33 +118,74 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
           children: [
             GestureDetector(
               onTap: _selectImage,
-              child: _image == null
-                  ? CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      radius: 50,
-                      child: Icon(
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: _image != null
+                      ? DecorationImage(
+                          image: FileImage(_image!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                child: _image == null
+                    ? Icon(
                         Icons.image,
                         size: 50,
                         color: Colors.white,
-                      ),
-                    )
-                  : CircleAvatar(
-                      backgroundImage: FileImage(_image!),
-                      radius: 50,
-                    ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
+                      )
+                    : null,
               ),
             ),
             SizedBox(height: 16.0),
-            TextField(
+            TextFormField(
+              controller: _titleController,
+              style: TextStyle(
+                color: Colors.purple,
+              ),
+              decoration: InputDecoration(
+                labelText: 'Title',
+                hintStyle: TextStyle(
+                  color: Colors.purple.shade400,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.transparent),
+                ),
+                filled: true,
+                fillColor: Colors.purple.shade50,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
               controller: _problemController,
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.purple,
+              ),
               decoration: InputDecoration(
                 labelText: 'Problem Faced',
+                
+                hintStyle: TextStyle(
+                  color: Colors.purple.shade400,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.transparent),
+                ),
+                filled: true,
+                fillColor: Colors.purple.shade50,
               ),
             ),
             SizedBox(height: 16.0),
