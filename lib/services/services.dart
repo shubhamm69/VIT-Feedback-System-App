@@ -10,7 +10,8 @@ class FeedbackService {
 
   Future<String> createFeedback(FeedbackModel feedback) async {
     try {
-      DocumentReference docRef = await _feedbacksCollection.add(feedback.toMap());
+      DocumentReference docRef =
+          await _feedbacksCollection.add(feedback.toMap());
       return docRef.id;
     } catch (e) {
       throw e;
@@ -22,7 +23,8 @@ class FeedbackService {
       DocumentSnapshot<Object?> docSnapshot =
           await _feedbacksCollection.doc(feedbackId).get();
       if (docSnapshot.exists) {
-        return FeedbackModel.fromMap(docSnapshot.data() as Map<String, dynamic>);
+        return FeedbackModel.fromMap(
+            docSnapshot.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -36,7 +38,20 @@ class FeedbackService {
           .where('userId', isEqualTo: userId)
           .snapshots()
           .map((querySnapshot) => querySnapshot.docs
-              .map((doc) => FeedbackModel.fromMap(doc.data()! as Map<String, dynamic>))
+              .map((doc) =>
+                  FeedbackModel.fromMap(doc.data()! as Map<String, dynamic>))
+              .toList());
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Stream<List<FeedbackModel>> getAllUserFeedbacksStream() {
+    try {
+      return _feedbacksCollection.snapshots().map((querySnapshot) =>
+          querySnapshot.docs
+              .map((doc) =>
+                  FeedbackModel.fromMap(doc.data()! as Map<String, dynamic>))
               .toList());
     } catch (e) {
       throw e;
@@ -61,7 +76,8 @@ class FeedbackService {
 
   Future<String> storeImage(String feedbackId, File image) async {
     try {
-      String imagePath = 'feedbacks/$feedbackId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      String imagePath =
+          'feedbacks/$feedbackId/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       await _storage.ref(imagePath).putFile(image);
 

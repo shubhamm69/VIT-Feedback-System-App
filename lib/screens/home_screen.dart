@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.purple,
       ),
       body: StreamBuilder<List<FeedbackModel>>(
-        stream: _feedbackService.getUserFeedbacksStream('userId'), // Replace 'userId' with the actual user ID
+        stream: _feedbackService.getAllUserFeedbacksStream(), // Replace 'userId' with the actual user ID
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final List<FeedbackModel> feedbacks = snapshot.data!;
