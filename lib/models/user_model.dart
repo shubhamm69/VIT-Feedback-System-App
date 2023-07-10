@@ -33,9 +33,7 @@ class UserModel {
       createdAt: map['createdAt'],
       phoneNumber: map['phoneNumber'],
       uid: map['uid'],
-      feedbacks: List<FeedbackModel>.from(
-        (map['feedbacks'] ?? []).map((feedback) => FeedbackModel.fromMap(feedback)),
-      ),
+      feedbacks: List<FeedbackModel>.from((map['feedbacks'] ?? []).map((feedback) => FeedbackModel.fromMap(feedback))),
     );
   }
 
