@@ -59,7 +59,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    HomeScreen(),
+                                    HomePage(),
                               ),
                             )
                           : Navigator.push(

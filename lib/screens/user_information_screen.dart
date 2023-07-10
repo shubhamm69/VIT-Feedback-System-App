@@ -190,7 +190,7 @@ class _userInformationScreenState extends State<userInformationScreen> {
                 ap.setSignIn().then((value) => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
+                      builder: (context) => HomePage(),
                     ),
                     (route) => false)));
           });
