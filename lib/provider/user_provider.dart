@@ -131,4 +131,27 @@ class UserProvider with ChangeNotifier {
       );
     }
   }
+
+  Future<void> addComment(
+      String feedbackId, String userId, String commentText) async {
+    try {
+      // Initialize Firebase
+      await Firebase.initializeApp();
+      // Create a new comment document in Firestore
+      final commentsRef = FirebaseFirestore.instance
+          .collection('feedbacks/$feedbackId/comments');
+      final commentDoc = commentsRef.doc();
+
+      // Create the comment data
+      final commentData = {
+        'userId': userId,
+        'commentText': commentText,
+      };
+
+      // Set the comment data in the Firestore document
+      await commentDoc.set(commentData);
+    } catch (error) {
+      print('Failed to add comment: $error');
+    }
+  }
 }

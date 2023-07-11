@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smartcityfeedbacksystem/provider/auth_provider.dart';
-import 'package:smartcityfeedbacksystem/screens/user_information_screen.dart';
+import 'package:smartcityfeedbacksystem/screens/auth/user_information_screen.dart';
 import 'package:smartcityfeedbacksystem/utils/snack_bar.dart';
 import 'package:smartcityfeedbacksystem/widgets/custom_button.dart';
 import 'package:pinput/pinput.dart';

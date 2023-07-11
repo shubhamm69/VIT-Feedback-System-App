@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartcityfeedbacksystem/provider/auth_provider.dart';
 import 'package:smartcityfeedbacksystem/screens/home_screen.dart';
-import 'package:smartcityfeedbacksystem/screens/registration_screen.dart';
+import 'package:smartcityfeedbacksystem/screens/auth/registration_screen.dart';
 import 'package:smartcityfeedbacksystem/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 
