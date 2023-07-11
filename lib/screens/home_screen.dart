@@ -3,7 +3,7 @@ import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
 import 'package:smartcityfeedbacksystem/screens/search/search_screen.dart';
 import 'package:smartcityfeedbacksystem/screens/feedback/addfeedback_screen.dart';
 import 'package:smartcityfeedbacksystem/screens/feedback/viewfeedback_screen.dart';
-import 'package:smartcityfeedbacksystem/services/services.dart';
+import 'package:smartcityfeedbacksystem/services/feedback_services.dart';
 import 'package:smartcityfeedbacksystem/widgets/feedback_card.dart';
 import 'package:smartcityfeedbacksystem/widgets/custom_button.dart';
 import 'package:smartcityfeedbacksystem/widgets/search_bar.dart';
@@ -90,13 +90,13 @@ class _HomePageState extends State<HomePage> {
                     return ListView.builder(
                       itemCount: feedbacks.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
+                        return InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => FeedbackViewScreen(
-                                  feedback: feedbacks[index],
+                                  feedbackId: feedbacks[index].id,
                                 ),
                               ),
                             );

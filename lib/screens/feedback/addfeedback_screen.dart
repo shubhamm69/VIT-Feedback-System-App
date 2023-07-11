@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
 import 'package:smartcityfeedbacksystem/provider/auth_provider.dart';
-import 'package:smartcityfeedbacksystem/services/services.dart';
+import 'package:smartcityfeedbacksystem/services/feedback_services.dart';
 import 'package:smartcityfeedbacksystem/utils/image_picker.dart';
 import 'package:smartcityfeedbacksystem/utils/snack_bar.dart';
 import 'package:smartcityfeedbacksystem/widgets/custom_button.dart';
