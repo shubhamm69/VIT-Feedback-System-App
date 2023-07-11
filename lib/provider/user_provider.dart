@@ -1,4 +1,4 @@
-import 'dart:io'; 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +18,13 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitFeedback(BuildContext context, String title, String problem, List<String> selectedImages) async {
+  Future<void> submitFeedback(
+      BuildContext context,
+      String title,
+      String problem,
+      List<String> selectedImages,
+      int severity,
+      String category) async {
     try {
       // Initialize Firebase
       await Firebase.initializeApp();
@@ -29,7 +35,8 @@ class UserProvider with ChangeNotifier {
       // Upload images to Firebase Storage and get their download URLs
       List<String> uploadedImageUrls = [];
       for (String imagePath in selectedImages) {
-        final Reference storageRef = FirebaseStorage.instance.ref().child('feedback_images/${feedbackDoc.id}/${DateTime.now().millisecondsSinceEpoch.toString()}');
+        final Reference storageRef = FirebaseStorage.instance.ref().child(
+            'feedback_images/${feedbackDoc.id}/${DateTime.now().millisecondsSinceEpoch.toString()}');
         final UploadTask uploadTask = storageRef.putFile(File(imagePath));
         final TaskSnapshot uploadSnapshot = await uploadTask;
         final String imageUrl = await uploadSnapshot.ref.getDownloadURL();
@@ -41,6 +48,8 @@ class UserProvider with ChangeNotifier {
         'title': title,
         'problem': problem,
         'images': uploadedImageUrls,
+        'severity': severity,
+        'category': category,
         // Add any additional data you want to store
       };
 
@@ -58,6 +67,8 @@ class UserProvider with ChangeNotifier {
           imagePath: uploadedImageUrls.isNotEmpty ? uploadedImageUrls[0] : '',
           upvotes: 0,
           downvotes: 0,
+          severity: severity,
+          category: category,
           comments: [],
         ),
       );
@@ -104,14 +115,15 @@ class UserProvider with ChangeNotifier {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Failed to submit feedback. Please try again later.'),
+            title: const Text('Error'),
+            content: const Text(
+                'Failed to submit feedback. Please try again later.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

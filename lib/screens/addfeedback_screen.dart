@@ -17,6 +17,20 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
   File? _image;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _problemController = TextEditingController();
+  int _selectedSeverity = 1; // Initialize selected severity with default value
+  String _selectedCategory =
+      'others'; // Initialize selected category with default value
+
+  List<int> _severityOptions = [1, 2, 3, 4, 5]; // Severity options
+  List<String> _categoryOptions = [
+    'mess',
+    'administration',
+    'infrastructure',
+    'clubs & events',
+    'hostel',
+    'academics',
+    'others'
+  ]; // Category options
 
   @override
   void dispose() {
@@ -60,6 +74,8 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
       imagePath: '',
       upvotes: 0,
       downvotes: 0,
+      severity: _selectedSeverity, // Assign selected severity
+      category: _selectedCategory, // Assign selected category
       comments: [],
     );
 
@@ -105,6 +121,72 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
     }
   }
 
+  Widget _buildSeverityDropdown() {
+    return DropdownButtonFormField<int>(
+      value: _selectedSeverity,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedSeverity = newValue!;
+        });
+      },
+      items: _severityOptions.map((severity) {
+        return DropdownMenuItem<int>(
+          value: severity,
+          child: Text(severity.toString()),
+        );
+      }).toList(),
+      decoration: InputDecoration(
+        labelText: 'Severity',
+        hintStyle: TextStyle(
+          color: Colors.purple.shade400,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        filled: true,
+        fillColor: Colors.purple.shade50,
+      ),
+    );
+  }
+
+  Widget _buildCategoryDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedCategory,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedCategory = newValue!;
+        });
+      },
+      items: _categoryOptions.map((category) {
+        return DropdownMenuItem<String>(
+          value: category,
+          child: Text(category),
+        );
+      }).toList(),
+      decoration: InputDecoration(
+        labelText: 'Category',
+        hintStyle: TextStyle(
+          color: Colors.purple.shade400,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        filled: true,
+        fillColor: Colors.purple.shade50,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,10 +226,10 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                     : null,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _titleController,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.purple,
               ),
               decoration: InputDecoration(
@@ -167,16 +249,15 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                 fillColor: Colors.purple.shade50,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextFormField(
               controller: _problemController,
               maxLines: 5,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.purple,
               ),
               decoration: InputDecoration(
                 labelText: 'Problem Faced',
-                
                 hintStyle: TextStyle(
                   color: Colors.purple.shade400,
                 ),
@@ -192,7 +273,11 @@ class _AddFeedbackScreenState extends State<AddFeedbackScreen> {
                 fillColor: Colors.purple.shade50,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
+            _buildSeverityDropdown(), // Add severity dropdown
+            const SizedBox(height: 16.0),
+            _buildCategoryDropdown(), // Add category dropdown
+            const SizedBox(height: 16.0),
             CustomButton(
               text: 'Save Feedback',
               onPressed: () => _saveFeedback(context),
