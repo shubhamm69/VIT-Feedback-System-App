@@ -6,10 +6,10 @@ import 'package:smartcityfeedbacksystem/screens/feedback/viewfeedback_screen.dar
 import 'package:smartcityfeedbacksystem/services/services.dart';
 import 'package:smartcityfeedbacksystem/widgets/feedback_card.dart';
 import 'package:smartcityfeedbacksystem/widgets/custom_button.dart';
+import 'package:smartcityfeedbacksystem/widgets/search_bar.dart';
 
 class HomePage extends StatefulWidget {
-
-  HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,8 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _feedbackService = FeedbackService();
-
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,33 +30,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search',
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.transparent),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.transparent),
-                ),
-                filled: true,
-                fillColor: Colors.purple.shade50,
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.search, color: Colors.purple,),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
+            child: searchBar(),
           ),
           SizedBox(
             child: ClipRRect(
@@ -88,12 +60,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigator.push(
-                    // context,
-                    // MaterialPageRoute(
-                    //   builder: (context) => SearchScreen(),
-                    // ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'View All',
