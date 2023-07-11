@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => FeedbackViewScreen(
-                                  feedbackId: feedbacks[index].id,
+                                  feedbackId: feedbacks[index].feedbackId,
                                 ),
                               ),
                             );

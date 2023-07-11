@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
 import 'package:smartcityfeedbacksystem/models/user_model.dart';
+import 'package:smartcityfeedbacksystem/models/engagement_model.dart';
 
 class UserProvider with ChangeNotifier {
   late UserModel _user;
@@ -43,6 +44,14 @@ class UserProvider with ChangeNotifier {
         uploadedImageUrls.add(imageUrl);
       }
 
+      // Create the engagement data
+      final engagementData = EngagementModel(
+        userId: _user.uid,
+        commentText: '',
+        liked: false,
+        disliked: false,
+      );
+
       // Create the feedback data
       final feedbackData = {
         'title': title,
@@ -50,6 +59,7 @@ class UserProvider with ChangeNotifier {
         'images': uploadedImageUrls,
         'severity': severity,
         'category': category,
+        'engagement': engagementData.toMap(),
         // Add any additional data you want to store
       };
 
@@ -60,7 +70,7 @@ class UserProvider with ChangeNotifier {
       final updatedFeedbacks = List<FeedbackModel>.from(_user.feedbacks);
       updatedFeedbacks.add(
         FeedbackModel(
-          id: feedbackDoc.id,
+          feedbackId: feedbackDoc.id,
           userId: _user.uid,
           title: title,
           problemFaced: problem,
@@ -69,7 +79,7 @@ class UserProvider with ChangeNotifier {
           downvotes: 0,
           severity: severity,
           category: category,
-          comments: [],
+          engagement: engagementData,
         ),
       );
 

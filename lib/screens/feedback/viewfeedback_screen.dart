@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
 import 'package:smartcityfeedbacksystem/services/feedback_services.dart';
-import 'package:smartcityfeedbacksystem/services/user_services.dart';
+
 class FeedbackViewScreen extends StatefulWidget {
   final String feedbackId;
 
-  const FeedbackViewScreen({Key? key, required this.feedbackId})
-      : super(key: key);
+  const FeedbackViewScreen({Key? key, required this.feedbackId}) : super(key: key);
 
   @override
   _FeedbackViewScreenState createState() => _FeedbackViewScreenState();
@@ -141,13 +140,16 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                           onPressed: () {
                             setState(() {
                               isLiked = !isLiked;
-                              if (isDisliked) isDisliked = false;
+                              if (isLiked) {
+                                isDisliked = false;
+                                feedback.upvotes++;
+                              } else {
+                                feedback.upvotes--;
+                              }
                             });
                           },
                           icon: Icon(
-                            isLiked
-                                ? Icons.thumb_up_alt
-                                : Icons.thumb_up_alt_outlined,
+                            isLiked ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
                             color: isLiked ? Colors.blue : null,
                           ),
                         ),
@@ -159,13 +161,16 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                           onPressed: () {
                             setState(() {
                               isDisliked = !isDisliked;
-                              if (isLiked) isLiked = false;
+                              if (isDisliked) {
+                                isLiked = false;
+                                feedback.downvotes++;
+                              } else {
+                                feedback.downvotes--;
+                              }
                             });
                           },
                           icon: Icon(
-                            isDisliked
-                                ? Icons.thumb_down_alt
-                                : Icons.thumb_down_alt_outlined,
+                            isDisliked ? Icons.thumb_down_alt : Icons.thumb_down_alt_outlined,
                             color: isDisliked ? Colors.red : null,
                           ),
                         ),
@@ -183,16 +188,7 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: feedback.comments.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(feedback.comments[index].commentText),
-                        );
-                      },
-                    ),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

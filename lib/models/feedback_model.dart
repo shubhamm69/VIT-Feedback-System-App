@@ -1,8 +1,7 @@
-
-import 'package:smartcityfeedbacksystem/models/comment_model.dart';
+import 'package:smartcityfeedbacksystem/models/engagement_model.dart';
 
 class FeedbackModel {
-  String id;
+  String feedbackId;
   String userId;
   String title;
   String problemFaced;
@@ -11,10 +10,10 @@ class FeedbackModel {
   int downvotes;
   int severity; // New field: Severity
   String category; // New field: Category
-  List<Comment> comments;
+  EngagementModel engagement;
 
   FeedbackModel({
-    required this.id,
+    required this.feedbackId,
     required this.userId,
     required this.title,
     required this.problemFaced,
@@ -23,12 +22,12 @@ class FeedbackModel {
     required this.downvotes,
     required this.severity, // Initialize severity
     required this.category, // Initialize category
-    required this.comments,
-  });
+    EngagementModel? engagement, // Change List<EngagementModel>? to EngagementModel?
+  }) : engagement = engagement ?? EngagementModel(); // Initialize engagement with a new instance if null
 
   factory FeedbackModel.fromMap(Map<String, dynamic> map) {
     return FeedbackModel(
-      id: map['id'],
+      feedbackId: map['feedbackId'],
       userId: map['userId'],
       title: map['title'],
       problemFaced: map['problemFaced'],
@@ -37,13 +36,13 @@ class FeedbackModel {
       downvotes: map['downvotes'],
       severity: map['severity'], // Assign severity from map
       category: map['category'], // Assign category from map
-      comments: List<Comment>.from((map['comments'] ?? []).map((comment) => Comment.fromMap(comment))),
+      engagement: EngagementModel.fromMap(map['engagement'] ?? {}), // Initialize engagement from map
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'feedbackId': feedbackId,
       'userId': userId,
       'title': title,
       'problemFaced': problemFaced,
@@ -52,7 +51,7 @@ class FeedbackModel {
       'downvotes': downvotes,
       'severity': severity, // Add severity to the map
       'category': category, // Add category to the map
-      'comments': comments.map((comment) => comment.toMap()).toList(),
+      'engagement': engagement.toMap(), // Add engagement to the map
     };
   }
 }

@@ -60,7 +60,7 @@ class FeedbackService {
 
   Future<void> updateFeedback(FeedbackModel feedback) async {
     try {
-      await _feedbacksCollection.doc(feedback.id).update(feedback.toMap());
+      await _feedbacksCollection.doc(feedback.feedbackId).update(feedback.toMap());
     } catch (e) {
       throw e;
     }

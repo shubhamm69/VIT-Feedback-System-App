@@ -20,11 +20,11 @@ class _searchBarState extends State<searchBar> {
         hintText: 'Search',
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.transparent),
+          borderSide: const BorderSide(color: Color.fromARGB(255, 223, 180, 231)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.transparent),
+          borderSide: const BorderSide(color: Colors.purple),
         ),
         filled: true,
         fillColor: Colors.purple.shade50,
