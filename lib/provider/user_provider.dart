@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,8 +45,7 @@ class UserProvider with ChangeNotifier {
 
       // Create the engagement data
       final engagementData = EngagementModel(
-        userId: _user.uid,
-        commentText: '',
+        feedbackId: feedbackDoc.id,
         liked: false,
         disliked: false,
       );

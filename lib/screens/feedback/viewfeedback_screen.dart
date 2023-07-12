@@ -13,21 +13,64 @@ class FeedbackViewScreen extends StatefulWidget {
 
 class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
   final feedbackService = FeedbackService();
+  late FeedbackModel feedback;
   bool isLiked = false;
   bool isDisliked = false;
 
   @override
+  void initState() {
+    super.initState();
+    // fetchFeedback();
+  }
+
+  // Future<void> fetchFeedback() async {
+  //   feedback = await feedbackService.getFeedbackById(widget.feedbackId);
+  //   if (feedback != null) {
+  //     setState(() {
+  //       isLiked = feedback.engagement?.liked ?? false;
+  //       isDisliked = feedback.engagement?.disliked ?? false;
+  //     });
+  //   }
+  // }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+      if (isLiked) {
+        isDisliked = false;
+        feedback.upvotes++;
+      } else {
+        feedback.upvotes--;
+      }
+    });
+    feedbackService.updateFeedback(feedback);
+  }
+
+  void toggleDislike() {
+    setState(() {
+      isDisliked = !isDisliked;
+      if (isDisliked) {
+        isLiked = false;
+        feedback.downvotes++;
+      } else {
+        feedback.downvotes--;
+      }
+    });
+    feedbackService.updateFeedback(feedback);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FeedbackModel?>(
-      future: feedbackService.getFeedbackById(widget.feedbackId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Feedback Details'),
-              backgroundColor: Colors.purple,
-            ),
-            body: const SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Feedback Details'),
+        backgroundColor: Colors.purple,
+      ),
+      body: FutureBuilder<FeedbackModel?>(
+        future: feedbackService.getFeedbackById(widget.feedbackId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SafeArea(
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -46,17 +89,10 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                   ],
                 ),
               ),
-            ),
-          );
-        } else if (snapshot.hasData && snapshot.data != null) {
-          final FeedbackModel feedback = snapshot.data!;
-
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Feedback Details'),
-              backgroundColor: Colors.purple,
-            ),
-            body: Padding(
+            );
+          } else if (snapshot.hasData && snapshot.data != null) {
+            feedback = snapshot.data!;
+            return Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
                 child: Column(
@@ -71,18 +107,18 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       feedback.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Problem Faced:',
                             style: TextStyle(
@@ -93,14 +129,14 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                         Text(
                           feedback.problemFaced,
-                          style: const TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Category:',
                             style: TextStyle(
@@ -111,14 +147,14 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                         Text(
                           feedback.category,
-                          style: const TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             'Severity:',
                             style: TextStyle(
@@ -129,25 +165,15 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                         Text(
                           '${feedback.severity}',
-                          style: const TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isLiked = !isLiked;
-                              if (isLiked) {
-                                isDisliked = false;
-                                feedback.upvotes++;
-                              } else {
-                                feedback.upvotes--;
-                              }
-                            });
-                          },
+                          onPressed: toggleLike,
                           icon: Icon(
                             isLiked ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
                             color: isLiked ? Colors.blue : null,
@@ -155,20 +181,10 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                         Text(
                           '${feedback.upvotes}',
-                          style: const TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                         ),
                         IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isDisliked = !isDisliked;
-                              if (isDisliked) {
-                                isLiked = false;
-                                feedback.downvotes++;
-                              } else {
-                                feedback.downvotes--;
-                              }
-                            });
-                          },
+                          onPressed: toggleDislike,
                           icon: Icon(
                             isDisliked ? Icons.thumb_down_alt : Icons.thumb_down_alt_outlined,
                             color: isDisliked ? Colors.red : null,
@@ -176,34 +192,28 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                         Text(
                           '${feedback.downvotes}',
-                          style: const TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
+                    SizedBox(height: 16),
+                    Text(
                       'Comments:',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                   ],
                 ),
               ),
-            ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Feedback Details'),
-              backgroundColor: Colors.purple,
-            ),
-            body: const Center(child: Text('Feedback not found.')),
-          );
-        }
-      },
+            );
+          } else {
+            return Center(child: Text('Feedback not found.'));
+          }
+        },
+      ),
     );
   }
 }

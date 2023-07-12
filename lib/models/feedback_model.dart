@@ -8,9 +8,9 @@ class FeedbackModel {
   String imagePath;
   int upvotes;
   int downvotes;
-  int severity; // New field: Severity
-  String category; // New field: Category
-  EngagementModel engagement;
+  int severity;
+  String category;
+  EngagementModel? engagement;
 
   FeedbackModel({
     required this.feedbackId,
@@ -20,10 +20,10 @@ class FeedbackModel {
     required this.imagePath,
     required this.upvotes,
     required this.downvotes,
-    required this.severity, // Initialize severity
-    required this.category, // Initialize category
-    EngagementModel? engagement, // Change List<EngagementModel>? to EngagementModel?
-  }) : engagement = engagement ?? EngagementModel(); // Initialize engagement with a new instance if null
+    required this.severity,
+    required this.category,
+    this.engagement,
+  });
 
   factory FeedbackModel.fromMap(Map<String, dynamic> map) {
     return FeedbackModel(
@@ -34,9 +34,9 @@ class FeedbackModel {
       imagePath: map['imagePath'],
       upvotes: map['upvotes'],
       downvotes: map['downvotes'],
-      severity: map['severity'], // Assign severity from map
-      category: map['category'], // Assign category from map
-      engagement: EngagementModel.fromMap(map['engagement'] ?? {}), // Initialize engagement from map
+      severity: map['severity'],
+      category: map['category'],
+      engagement: map['engagement'] != null ? EngagementModel.fromMap(map['engagement'] as Map<String, dynamic>) : null,
     );
   }
 
@@ -49,9 +49,9 @@ class FeedbackModel {
       'imagePath': imagePath,
       'upvotes': upvotes,
       'downvotes': downvotes,
-      'severity': severity, // Add severity to the map
-      'category': category, // Add category to the map
-      'engagement': engagement.toMap(), // Add engagement to the map
+      'severity': severity,
+      'category': category,
+      'engagement': engagement?.toMap(),
     };
   }
 }

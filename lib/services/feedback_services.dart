@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
+import 'package:smartcityfeedbacksystem/models/engagement_model.dart';
 
 class FeedbackService {
   final CollectionReference _feedbacksCollection =
@@ -24,7 +25,8 @@ class FeedbackService {
           await _feedbacksCollection.doc(feedbackId).get();
       if (docSnapshot.exists) {
         return FeedbackModel.fromMap(
-            docSnapshot.data() as Map<String, dynamic>);
+          docSnapshot.data() as Map<String, dynamic>,
+        );
       }
       return null;
     } catch (e) {
@@ -60,7 +62,9 @@ class FeedbackService {
 
   Future<void> updateFeedback(FeedbackModel feedback) async {
     try {
-      await _feedbacksCollection.doc(feedback.feedbackId).update(feedback.toMap());
+      await _feedbacksCollection
+          .doc(feedback.feedbackId)
+          .update(feedback.toMap());
     } catch (e) {
       throw e;
     }
