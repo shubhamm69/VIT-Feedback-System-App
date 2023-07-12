@@ -17,4 +17,22 @@ class UserService {
       throw e;
     }
   }
+
+  Future<String?> getUsernameById(String? userId) async {
+    try {
+      if (userId == null) {
+        return null;
+      }
+
+      final snapshot = await _usersCollection.doc(userId).get();
+      if (snapshot.exists) {
+        final userData = snapshot.data() as Map<String, dynamic>;
+        return userData['username'] as String?;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching username: $e');
+      return null;
+    }
+  }
 }

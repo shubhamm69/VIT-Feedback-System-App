@@ -77,7 +77,6 @@ class UserProvider with ChangeNotifier {
           downvotes: 0,
           severity: severity,
           category: category,
-          engagement: engagementData,
         ),
       );
 

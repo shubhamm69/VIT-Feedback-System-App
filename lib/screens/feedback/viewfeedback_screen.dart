@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:smartcityfeedbacksystem/models/engagement_model.dart';
 import 'package:smartcityfeedbacksystem/models/feedback_model.dart';
 import 'package:smartcityfeedbacksystem/services/feedback_services.dart';
+import 'package:smartcityfeedbacksystem/services/engagement_services.dart';
+import 'package:smartcityfeedbacksystem/services/user_services.dart';
+import 'package:smartcityfeedbacksystem/widgets/comment_card.dart';
 
 class FeedbackViewScreen extends StatefulWidget {
   final String feedbackId;
 
-  const FeedbackViewScreen({Key? key, required this.feedbackId}) : super(key: key);
+  const FeedbackViewScreen({Key? key, required this.feedbackId})
+      : super(key: key);
 
   @override
   _FeedbackViewScreenState createState() => _FeedbackViewScreenState();
@@ -13,25 +18,41 @@ class FeedbackViewScreen extends StatefulWidget {
 
 class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
   final feedbackService = FeedbackService();
+  final engagementService = EngagementService();
+  final userService = UserService(); // Create an instance of UserService
+
   late FeedbackModel feedback;
   bool isLiked = false;
   bool isDisliked = false;
+  final TextEditingController _commentController = TextEditingController();
+  List<EngagementModel> comments = [];
 
   @override
   void initState() {
     super.initState();
-    // fetchFeedback();
+    fetchFeedback();
+    fetchComments();
   }
 
-  // Future<void> fetchFeedback() async {
-  //   feedback = await feedbackService.getFeedbackById(widget.feedbackId);
-  //   if (feedback != null) {
-  //     setState(() {
-  //       isLiked = feedback.engagement?.liked ?? false;
-  //       isDisliked = feedback.engagement?.disliked ?? false;
-  //     });
-  //   }
-  // }
+  Future<void> fetchFeedback() async {
+    feedback = (await feedbackService.getFeedbackById(widget.feedbackId))!;
+    if (feedback != null) {
+      setState(() {
+        isLiked = feedback.engagement?.liked ?? false;
+        isDisliked = feedback.engagement?.disliked ?? false;
+      });
+    }
+  }
+
+  Future<void> fetchComments() async {
+    final fetchedComments =
+        await engagementService.fetchComments(widget.feedbackId);
+    if (fetchedComments != null) {
+      setState(() {
+        comments = fetchedComments as List<EngagementModel>;
+      });
+    }
+  }
 
   void toggleLike() {
     setState(() {
@@ -57,6 +78,60 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
       }
     });
     feedbackService.updateFeedback(feedback);
+  }
+
+  void sendComment() async {
+    String commentText = _commentController.text.trim();
+    if (commentText.isEmpty) {
+      return;
+    }
+
+    EngagementModel comment = EngagementModel(
+      feedbackId: widget.feedbackId,
+      userId: feedback.userId,
+      commentText: commentText,
+      liked: false,
+      disliked: false,
+    );
+
+    await engagementService.createComment(
+      widget.feedbackId,
+      feedback.userId,
+      commentText,
+    );
+    _commentController.clear();
+
+    // Fetch the updated comment
+    EngagementModel? updatedComment =
+        await engagementService.fetchComments(widget.feedbackId);
+    if (updatedComment != null) {
+      setState(() {
+        comments.add(updatedComment);
+      });
+    }
+    print(updatedComment?.commentText);
+
+    showCommentPostedDialog(); // Show the dialog after posting the comment
+  }
+
+  void showCommentPostedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Comment Posted'),
+          content: const Text('Your comment has been posted successfully.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -175,7 +250,9 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         IconButton(
                           onPressed: toggleLike,
                           icon: Icon(
-                            isLiked ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
+                            isLiked
+                                ? Icons.thumb_up_alt
+                                : Icons.thumb_up_alt_outlined,
                             color: isLiked ? Colors.blue : null,
                           ),
                         ),
@@ -186,7 +263,9 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         IconButton(
                           onPressed: toggleDislike,
                           icon: Icon(
-                            isDisliked ? Icons.thumb_down_alt : Icons.thumb_down_alt_outlined,
+                            isDisliked
+                                ? Icons.thumb_down_alt
+                                : Icons.thumb_down_alt_outlined,
                             color: isDisliked ? Colors.red : null,
                           ),
                         ),
@@ -196,21 +275,61 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
-                    Text(
+                    const SizedBox(height: 16),
+                    const Text(
                       'Comments:',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = comments[index];
+                        return FutureBuilder<String?>(
+                          future: userService.getUsernameById(comment
+                              .userId), // Call the method on the instance
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasData) {
+                              final username = snapshot.data!;
+                              return CommentCard(
+                                engagement: comment,
+                                username: username,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return Text('Username not found');
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _commentController,
+                      decoration: const InputDecoration(
+                        labelText: 'Add a comment',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: sendComment,
+                      child: const Text('Send'),
+                    ),
                   ],
                 ),
               ),
             );
           } else {
-            return Center(child: Text('Feedback not found.'));
+            return const Center(child: Text('Feedback not found.'));
           }
         },
       ),

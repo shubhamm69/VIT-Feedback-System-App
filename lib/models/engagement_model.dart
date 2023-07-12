@@ -1,4 +1,5 @@
 class EngagementModel {
+  String? engagementId;
   String? feedbackId;
   String? userId;
   String? commentText;
@@ -6,7 +7,8 @@ class EngagementModel {
   bool disliked;
 
   EngagementModel({
-    required feedbackId,
+    this.engagementId,
+    required this.feedbackId,
     this.userId,
     this.commentText,
     this.liked = false,

@@ -10,7 +10,6 @@ class FeedbackModel {
   int downvotes;
   int severity;
   String category;
-  EngagementModel? engagement;
 
   FeedbackModel({
     required this.feedbackId,
@@ -22,7 +21,6 @@ class FeedbackModel {
     required this.downvotes,
     required this.severity,
     required this.category,
-    this.engagement,
   });
 
   factory FeedbackModel.fromMap(Map<String, dynamic> map) {
@@ -35,10 +33,10 @@ class FeedbackModel {
       upvotes: map['upvotes'],
       downvotes: map['downvotes'],
       severity: map['severity'],
-      category: map['category'],
-      engagement: map['engagement'] != null ? EngagementModel.fromMap(map['engagement'] as Map<String, dynamic>) : null,
-    );
+      category: map['category'],);
   }
+
+  get engagement => null;
 
   Map<String, dynamic> toMap() {
     return {
@@ -51,7 +49,6 @@ class FeedbackModel {
       'downvotes': downvotes,
       'severity': severity,
       'category': category,
-      'engagement': engagement?.toMap(),
     };
   }
 }
