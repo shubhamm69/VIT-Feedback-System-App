@@ -5,18 +5,20 @@ class EngagementService {
   final CollectionReference _engagementsCollection =
       FirebaseFirestore.instance.collection('engagements');
 
-  Future<EngagementModel?> fetchComments(String feedbackId) async {
-    try {
-      final snapshot = await _engagementsCollection.doc(feedbackId).get();
-      if (snapshot.exists) {
-        return EngagementModel.fromMap(snapshot.data() as Map<String, dynamic>);
-      }
-      return null;
-    } catch (e) {
-      print('Error fetching engagement: $e');
-      return null;
-    }
+Future<List<EngagementModel>> fetchCommentsByFeedbackId(String feedbackId) async {
+  try {
+    final querySnapshot = await _engagementsCollection
+        .where('feedbackId', isEqualTo: feedbackId)
+        .get();
+    return querySnapshot.docs
+        .map((doc) => EngagementModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+  } catch (e) {
+    print('Error fetching comments: $e');
+    return [];
   }
+}
+
 
   Future<void> createComment(
       String feedbackId, String userId, String? commentText) async {

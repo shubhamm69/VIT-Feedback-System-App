@@ -19,6 +19,7 @@ class FeedbackViewScreen extends StatefulWidget {
 class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
   final feedbackService = FeedbackService();
   final engagementService = EngagementService();
+
   final userService = UserService(); // Create an instance of UserService
 
   late FeedbackModel feedback;
@@ -46,12 +47,10 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
 
   Future<void> fetchComments() async {
     final fetchedComments =
-        await engagementService.fetchComments(widget.feedbackId);
-    if (fetchedComments != null) {
-      setState(() {
-        comments = fetchedComments as List<EngagementModel>;
-      });
-    }
+        await engagementService.fetchCommentsByFeedbackId(widget.feedbackId);
+    setState(() {
+      comments = fetchedComments;
+    });
   }
 
   void toggleLike() {
@@ -102,14 +101,14 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
     _commentController.clear();
 
     // Fetch the updated comment
-    EngagementModel? updatedComment =
-        await engagementService.fetchComments(widget.feedbackId);
-    if (updatedComment != null) {
+    List<EngagementModel> updatedComments =
+        await engagementService.fetchCommentsByFeedbackId(widget.feedbackId);
+
+    if (updatedComments.isNotEmpty) {
       setState(() {
-        comments.add(updatedComment);
+        comments.addAll(updatedComments);
       });
     }
-    print(updatedComment?.commentText);
 
     showCommentPostedDialog(); // Show the dialog after posting the comment
   }
@@ -306,7 +305,7 @@ class _FeedbackViewScreenState extends State<FeedbackViewScreen> {
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else {
-                              return Text('Username not found');
+                              return Text('i am also facing this problem.! ');
                             }
                           },
                         );
